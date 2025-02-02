@@ -7,7 +7,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // Helper function to create a system prompt for syllabus summarization
 const createSyllabusPrompt = (syllabus) => {
-    return `Please analyze and summarize the following course syllabus. Focus on:
+    return `Please analyze and summarize the following course syllabus. Make sure to include:
     - Course objectives and learning outcomes
     - Main topics covered
     - Assessment methods
@@ -18,38 +18,44 @@ const createSyllabusPrompt = (syllabus) => {
     ${syllabus}`;
 };
 
-// Main function to summarize syllabus
-async function summarizeSyllabus(syllabusText) {
+// // Main function to summarize syllabus
+// async function summarizeSyllabus(syllabusText) {
+//     try {
+//         // Get the generative model
+//         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+//         // Create the prompt
+//         const prompt = createSyllabusPrompt(syllabusText);
+
+//         // Generate the response
+//         const result = await model.generateContent(prompt);
+//         const response = await result.response;
+//         return response.text();
+//     } catch (error) {
+//         console.error('Error in Gemini API call:', error);
+//         throw new Error('Failed to generate syllabus summary');
+//     }
+// }
+
+async function analyzeReviews(reviews, focus) {
     try {
         // Get the generative model
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-        // Create the prompt
-        const prompt = createSyllabusPrompt(syllabusText);
+        let prompt = `Analyze these movie reviews and provide:
+        1. Overall sentiment analysis
+        2. Common themes or patterns
+        3. Main criticisms and praise points
+        `
 
-        // Generate the response
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        return response.text();
-    } catch (error) {
-        console.error('Error in Gemini API call:', error);
-        throw new Error('Failed to generate syllabus summary');
-    }
-}
+        if (!(focus === "None")) {
+            prompt = prompt + "Answer with a focus on " + focus + "\n"
+        }
+            
+        prompt = prompt + `Reviews: ${reviews.join('\n\n')}`;
 
-async function analyzeReviews(reviews) {
-    try {
-        // Get the generative model
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-        const prompt = `Analyze these movie reviews and provide:
-1. Overall sentiment analysis
-2. Common themes or patterns
-3. Main criticisms and praise points
-
-Reviews:
-${reviews.join('\n\n')}`;
-
+        console.log(prompt)
+        
         // Generate the response
         const result = await model.generateContent(prompt);
         const response = await result.response;
@@ -62,6 +68,5 @@ ${reviews.join('\n\n')}`;
 
 // Export the function to be used by other files
 module.exports = {
-    summarizeSyllabus, 
     analyzeReviews
 };

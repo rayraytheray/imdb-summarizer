@@ -19,30 +19,31 @@ app.use(express.static('public'));
 const gemini = require('./gemini');
 
 
-// POST endpoint to handle syllabus summarization
-app.post('/api/summarize', async (req, res) => {
-  try {
-    const { syllabus } = req.body;
-    if (!syllabus) {
-      return res.status(400).json({ error: 'No syllabus provided' });
-    }
+// // POST endpoint to handle syllabus summarization
+// app.post('/api/summarize', async (req, res) => {
+//   try {
+//     const { syllabus } = req.body;
+//     if (!syllabus) {
+//       return res.status(400).json({ error: 'No syllabus provided' });
+//     }
     
-    // Call your Gemini summarization function (assumed to be asynchronous)
-    const summary = await gemini.summarizeSyllabus(syllabus);
+//     // Call your Gemini summarization function (assumed to be asynchronous)
+//     const summary = await gemini.summarizeSyllabus(syllabus);
     
-    // Respond with the summary
-    res.json({ summary });
-  } catch (error) {
-    console.error('Error summarizing syllabus:', error);
-    res.status(500).json({ error: 'Error generating summary' });
-  }
-});
+//     // Respond with the summary
+//     res.json({ summary });
+//   } catch (error) {
+//     console.error('Error summarizing syllabus:', error);
+//     res.status(500).json({ error: 'Error generating summary' });
+//   }
+// });
 
 // IMDB Review scraping and analysis endpoint
 app.get('/api/analyze/:imdbId', async (req, res) => {
   try {
     const { imdbId } = req.params;
     const limit = req.query.limit ? parseInt(req.query.limit) : 50; // Default to 50 reviews
+    const focus = req.query.focus;
 
     if (!imdbId) {
       return res.status(400).json({ error: 'IMDB ID is required' });
@@ -52,7 +53,7 @@ app.get('/api/analyze/:imdbId', async (req, res) => {
     const reviewsData = await scrapeImdbReviews(imdbId, limit);
     
     // Analyze with Gemini
-    const analysis = await gemini.analyzeReviews(reviewsData);
+    const analysis = await gemini.analyzeReviews(reviewsData, focus);
     
     // Send back analysis
     res.json(analysis);

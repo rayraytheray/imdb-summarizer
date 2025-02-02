@@ -10,6 +10,8 @@
     #summaryOutput { margin-top: 20px; padding: 10px; background: #f9f9f9; border: 1px solid #ddd; }
     h1 {text-align: center;}
     h2 {text-align: left;}
+    p {text-align: center;}
+</style>
   </style>
 </head>
 <body>
@@ -56,6 +58,15 @@
         animation: gradientAnimation 6s ease infinite;
     }
 
+    textarea {
+        display: flex;
+        align-items: center;
+        left: 50%;
+        transform: translateX(-50%);
+        position: relative;
+        display: inline-block;
+    }
+
     .dropbtn {
         background-color: #6200ea;
         color: white;
@@ -70,7 +81,8 @@
     .dropdown {
         display: flex;
         align-items: center;
-        transform: translateX(192%);
+        left: 50%;
+        transform: translateX(-50%);
         position: relative;
         display: inline-block;
     }
@@ -79,6 +91,7 @@
     .dropdown-content {
         display: none;
         position: absolute;
+        align-items: right;
         background-color: white;
         min-width: 160px;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
@@ -163,7 +176,7 @@
     document.getElementById('summarizeButton').addEventListener('click', async () => {
       const imdbId = document.getElementById('syllabusInput').value.trim();
       if (!imdbId) {
-        alert('Please paste your syllabus before summarizing.');
+        alert('Please paste your movie\'s ID before summarizing.');
         return;
       }
       
@@ -172,7 +185,7 @@
       
       try {
         // Make GET request with imdbId in URL and limit as query parameter
-        const response = await fetch(`/api/analyze/${imdbId}?limit=50`, {
+        const response = await fetch(`/api/analyze/${imdbId}?limit=50&focus=${document.getElementById("selectedOption").innerText}`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' }
         });

@@ -5,13 +5,13 @@ const cheerio = require('cheerio');
 async function scrapeReviews($) {
     console.log('Starting review extraction...');
     
-    // First, try to find review containers that might hold our target divs
-    const containerSelectors = [
-        'div.review-container',
-        'div[data-review-id]',
-        'div.lister-item',
-        'div.review-list-item'
-    ];
+    // // First, try to find review containers that might hold our target divs
+    // const containerSelectors = [
+    //     'div.review-container',
+    //     'div[data-review-id]',
+    //     'div.lister-item',
+    //     'div.review-list-item'
+    // ];
     
     // Direct selector for the content, regardless of nesting
     const contentSelector = 'div.ipc-html-content-inner-div[role="presentation"]';

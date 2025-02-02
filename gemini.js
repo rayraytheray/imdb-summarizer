@@ -1,8 +1,9 @@
+require('dotenv').config();
+
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 // Initialize the Gemini API with your API key
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-console.log(process.env.GEMINI_API_KEY)
 
 // Helper function to create a system prompt for syllabus summarization
 const createSyllabusPrompt = (syllabus) => {
@@ -36,7 +37,31 @@ async function summarizeSyllabus(syllabusText) {
     }
 }
 
+async function analyzeReviews(reviews) {
+    try {
+        // Get the generative model
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+        const prompt = `Analyze these movie reviews and provide:
+1. Overall sentiment analysis
+2. Common themes or patterns
+3. Main criticisms and praise points
+
+Reviews:
+${reviews.join('\n\n')}`;
+
+        // Generate the response
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        return response.text();
+    } catch (error) {
+        console.error('Error in Gemini API call:', error);
+        throw new Error('Failed to analyze reviews');
+    }
+}
+
 // Export the function to be used by other files
 module.exports = {
-    summarizeSyllabus
+    summarizeSyllabus, 
+    analyzeReviews
 };

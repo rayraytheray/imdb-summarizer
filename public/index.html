@@ -1,0 +1,218 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Class Syllabus Summarizer</title>
+  <style>
+    body { font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif, sans-serif; padding: 20px; }
+    textarea { width: 20%; text-align: center;}
+    #summaryOutput { margin-top: 20px; padding: 10px; background: #f9f9f9; border: 1px solid #ddd; }
+    h1 {text-align: center;}
+    h2 {text-align: left;}
+  </style>
+</head>
+<body>
+  <h1>Movie Review Summarizer</h1>
+  
+  <textarea id="syllabusInput" rows="1" placeholder="Paste your movie's IMDb ID here"></textarea>
+  <br>
+
+  <div class="dropdown">
+    <button class="dropbtn">What do you want to know about? ▼</button>
+    <div class="dropdown-content">
+        <a href="#" onclick="selectOption('Acting')">Acting</a>
+        <a href="#" onclick="selectOption('Direction')">Direction</a>
+        <a href="#" onclick="selectOption('Cinematography')">Cinematography</a>
+    </div>
+  </div>
+
+  <p>Selected: <span id="selectedOption">None</span></p>
+
+  <div class="container_one">
+    <button id="summarizeButton" class="summarizeButton">Summarize</button>
+  </div>
+
+  <!-- Container for the Summary Output -->
+  <div class="container_two">
+    <h2>Summary:</h2>
+    <div id="summaryOutput"></div>
+  </div>
+
+  <!-- <div class="container_three">
+    <button id="emailButton" class="emailButton">Send Email</button>
+  </div> -->
+
+  <style>
+    @keyframes gradientAnimation {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    body {
+        background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffee, #4800ff);
+        background-size: 300% 300%;
+        animation: gradientAnimation 6s ease infinite;
+    }
+
+    .dropbtn {
+        background-color: #6200ea;
+        color: white;
+        padding: 12px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    /* Dropdown container */
+    .dropdown {
+        display: flex;
+        align-items: center;
+        transform: translateX(192%);
+        position: relative;
+        display: inline-block;
+    }
+
+    /* Dropdown content (hidden by default) */
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: white;
+        min-width: 160px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        border-radius: 5px;
+        z-index: 1;
+    }
+
+    /* Dropdown links */
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        display: block;
+        text-decoration: none;
+    }
+
+    /* Show dropdown on hover */
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    /* Hover effect for items */
+    .dropdown-content a:hover {
+        background-color: #f1f1f1;
+    }
+    /* Center the button */
+    .container_one {
+        display: flex;
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+        height: 10vh; /* Adjust height */
+    }
+
+    .summarizeButton {
+        background-color: #6200ea;
+        color: white;
+        padding: 12px 24px;
+        font-size: 18px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s ease-in-out;
+    }
+
+    .summarizeButton:hover {
+        background-color: #3700b3;
+    }
+
+    /* Position Summary Output */
+    .container_two {
+        display: flex;
+        flex-direction: column; /* Stack elements vertically */
+        justify-content: flex-start;
+        align-items: left;
+        margin-top: 20px; /* Add spacing */
+    }
+
+    .container_three {
+        display: flex;
+        flex-direction: column; /* Stack elements vertically */
+        justify-content: center;
+        align-items: center; /* Center vertically */
+        height: 10vh; /* Adjust height */
+    }
+
+    /* .emailButton {
+        background-color: #6200ea;
+        color: white;
+        padding: 12px 24px;
+        font-size: 18px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s ease-in-out;
+    }
+
+    .emailButton:hover {
+        background-color: #3700b3;
+    } */
+  </style>
+
+  <script>
+    document.getElementById('summarizeButton').addEventListener('click', async () => {
+      const imdbId = document.getElementById('syllabusInput').value.trim();
+      if (!imdbId) {
+        alert('Please paste your syllabus before summarizing.');
+        return;
+      }
+      
+      // Show a loading message (optional)
+      document.getElementById('summaryOutput').innerHTML = 'Summarizing...';
+      
+      try {
+        // Make GET request with imdbId in URL and limit as query parameter
+        const response = await fetch(`/api/analyze/${imdbId}?limit=50`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        
+        if (!response.ok) {
+          throw new Error('Server responded with an error');
+        }
+        
+        const analysis = await response.json();
+        
+        // Format the summary into bullet points if needed.
+        // Here we simply insert the summary text. Adjust this part based on your Gemini output.
+        document.getElementById('summaryOutput').innerHTML = analysis.replace(/\n/g, '<br>');
+      } catch (error) {
+        console.error('Error getting analysis:', error);
+        document.getElementById('summaryOutput').innerHTML = 'An error occurred while getting analysis.';
+      }
+    });
+
+    function toggleDropdown() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+    function selectOption(option) {
+        document.getElementById("selectedOption").innerText = option; // Update UI
+        console.log("User selected:", option);  // Track selection
+    }
+
+    // Close dropdown when clicking outside
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            for (var i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>

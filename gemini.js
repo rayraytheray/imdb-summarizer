@@ -6,17 +6,17 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // Helper function to create a system prompt for syllabus summarization
-const createSyllabusPrompt = (syllabus) => {
-    return `Please analyze and summarize the following course syllabus. Make sure to include:
-    - Course objectives and learning outcomes
-    - Main topics covered
-    - Assessment methods
-    - Key deadlines
-    - Required materials
+// const createSyllabusPrompt = (syllabus) => {
+//     return `Please analyze and summarize the following course syllabus. Make sure to include:
+//     - Course objectives and learning outcomes
+//     - Main topics covered
+//     - Assessment methods
+//     - Key deadlines
+//     - Required materials
     
-    Here's the syllabus:
-    ${syllabus}`;
-};
+//     Here's the syllabus:
+//     ${syllabus}`;
+// };
 
 // // Main function to summarize syllabus
 // async function summarizeSyllabus(syllabusText) {

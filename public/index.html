@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Class Syllabus Summarizer</title>
+  <title>IMDB Review Summary</title>
   <style>
     body { font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif, sans-serif; padding: 20px; }
     textarea { width: 20%; text-align: center;}
@@ -17,7 +17,7 @@
 <body>
   <h1>Movie Review Summarizer</h1>
   
-  <textarea id="syllabusInput" rows="1" placeholder="Paste your movie's IMDb ID here"></textarea>
+  <textarea id="imdb" rows="1" placeholder="Paste your movie's IMDb ID here"></textarea>
   <br>
 
   <div class="dropdown">
@@ -174,7 +174,7 @@
 
   <script>
     document.getElementById('summarizeButton').addEventListener('click', async () => {
-      const imdbId = document.getElementById('syllabusInput').value.trim();
+      const imdbId = document.getElementById('imdb').value.trim();
       if (!imdbId) {
         alert('Please paste your movie\'s ID before summarizing.');
         return;
